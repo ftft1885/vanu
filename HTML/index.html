@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>test</title>
+<meta charset="utf-8">
+<link href="./CSS/index.css" rel="stylesheet" type="text/css"></link>
+</head>
+<body>
+<div id="main_header"></div>
+<div id="main_body">
+	<div id="main_menu">
+	<ul id="menu">
+		<li id="menu_pools"><a>服务池</a></li>
+	</ul>
+	</div>
+
+	<div id="main_content"></div>
+</div>
+<div id="main_footer"></div>
+<script>
+var menu = document.getElementById("menu");
+var menu_pools = document.getElementById("menu_pools");
+var main_content = document.getElementById("main_content");
+menu_pools.onclick = function()
+{
+	ajax('/menu/pools',function(result)
+	{
+		main_content.innerHTML = result;
+	});
+}
+
+function ajax(url,callback)
+{
+	var xhr;
+	if(window.XMLHttpRequest)
+		xhr = new XMLHttpRequest();
+	else
+		xhr = new ActiveXObject("Microsoft.XMLHTTP");
+	xhr.onreadystatechange = function()
+	{
+		if(xhr.readyState == 4)
+			callback(xhr.responseText);
+	}
+	xhr.open("POST",url,true);
+	xhr.send();
+}
+</script>
+</body>
+</html>
+
