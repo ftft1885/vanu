@@ -30,13 +30,13 @@
 <%=introduction %>
 </p>
 <ul id="pools_list" class="content_list"> 
-<li>test1
-<li>test2
-<li>test3
 </ul>
 </script>
 <script type="text/template" id="pools_detail">
- a test pool detail
+Protocal Layer : <%=protocol_layer %><br>
+服务节点： <%=nodes %><br>
+健康检查： <%=monitor %><br>
+最长时间回复：<%=max_reply_time %><br>
 </script>
 <script>
 //TODO:fix the collection fetch bug
@@ -65,16 +65,16 @@ var pools_detail = Backbone.View.extend({
 	template	:	_.template($('#pools_detail').html()),
 	initialize	:	function(){
 		console.log("detail initial");
-		//console.log($('#pools_detail'));
+		console.log(this.model.toJSON());
 		this.render();
 	},
 	render		:	function(){
-		this.$el.html(this.template());
+		this.$el.html(this.template(this.model.toJSON()));
 		return this;
 	}
 });
 
-var pool_model = Backbone.View.extend({
+var pool_model = Backbone.Model.extend({
 	defaults	:	function(){
 		return {
 			protocol_layer	:	'undef',
@@ -84,40 +84,45 @@ var pool_model = Backbone.View.extend({
 		}
 	},
 
-	validate	:	function(){
-		console.log("validate");
-	},
-
 	initialize	:	function(){
 		console.log("pool_model initial");
 	}
 }); 
 
+var one_pool = new pool_model({nodes:'sdfas'});
+console.log(one_pool.toJSON());
+
 var pool_collection = Backbone.Collection.extend({
 	model	:	pool_model,
-	url		:	'data?ask=pools',
+	url		:	'/data',
 });
 
-//var pools = new pool_collection;
+var pools = new pool_collection;
 
 var pools_view = Backbone.View.extend({
 	tagName		:	'div',
 	template	:	_.template($('#pools_div').html()),
 	initialize	:	function(){
 		this.render();
-		/*find all pools
-		fetch() for()
-		$('ul').append(new pools_detail().el).....
-		*/
-		//$('#pools_list').append(new pools_detail().el);
+		pools.bind('reset',this.addAll,this);
+		pools.bind('add',this.addOne,this);
+		pools.fetch();
+	},
+	addOne	:	function(one_pool_model){
+		var view = new pools_detail({model:one_pool_model});
+		$('#pools_list').append(view.el);
+	},
+	addAll	:	function(){
+		pools.each(this.addOne);
 	},
 	events	:	{
 		"click"		:	"func"
 	},
 	func	:	function(){
-		pools.bind('all',function(e){console.log(e)});
-		pools.fetch({add:true});
-		console.log(pools);
+		//pools.bind('all',function(e){console.log(e)});
+		//pools.fetch({add:true});
+		//console.log(pools);
+		console.log(pools.toJSON());
 		$('#pools_list').append(new pools_detail().el);
 	},
 	render		:	function(){

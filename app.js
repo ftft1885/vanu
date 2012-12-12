@@ -1,6 +1,7 @@
 var http	=	require("http");
 var fs		=	require("fs");
 var url 	=	require("url");
+var querystring = require('querystring');
 var menu = require("./menu");
 var port = 80;
 var env = process.env.NUVAHTML;
@@ -25,13 +26,28 @@ http.createServer(function(req,res)
 	});
 	//res.end("test");
 	*/
-
 	if(req.url == "/")
 	{
 			res.writeHead(302,{'Location':'/index.html'});
 			res.end();
 	}
 	console.log(env + pathname);
+	//test
+	if(pathname == '/test')
+	{
+		req.on('data',function(data)
+		{
+			var datastr = data + "";
+			//var str = decodeURL(datastr);
+			var str = querystring.unescape(datastr);
+
+			console.log(str);
+		});
+		
+		return;
+	}
+	//
+	
 	if(pathname == '/data')
 	{
 			console.log("ask for data");
