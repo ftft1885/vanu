@@ -24,7 +24,7 @@
 
 <script type="text/template" id="pools_div">
 <div id="content_header">
-<span class="content_name"><%=name  %></span><span class="content_addnew">新建<%=name %></span>
+<span class="content_name"><%=name  %></span><span class="content_addnew"><a href="#pools/addnew">新建<%=name %></a></span>
 </div>
 <p class="content_introduction">
 <%=introduction %>
@@ -38,6 +38,9 @@ Protocal Layer : <%=protocol_layer %><br>
 健康检查： <%=monitor %><br>
 最长时间回复：<%=max_reply_time %><br>
 </script>
+<script type="text/template" id="add_new">
+a add new div
+</script>
 <script>
 //TODO:fix the collection fetch bug
 
@@ -48,15 +51,38 @@ window.nuvaRouter = Backbone.Router.extend({
 
 	routes	:	{
 		""			:	"index",
-		":menu"		:	"poolsFunc"
+		":menu"		:	"poolsFunc",
+		":menu/addnew"	:	"addNewFunc"
 	},
 
 	index		: function(){
 		console.log("homepage");
 	},
+	addNewFunc	:	function(menu){
+		console.log("addnew");
+		switch(menu){
+			case "pools"	:
+				$('#main_content').append(new add_new_view().el);
+				console.log(new add_new_view());
+			break;
+		}
+	},
 	poolsFunc	: function(menu){
 		console.log("you click "+menu);
 		$('#main_content').append(new pools_view().el);
+	}
+});
+
+var add_new_view = Backbone.View.extend({
+	tagName		:	'div',
+	className	:	'add_new',
+	template	:	_.template($('#add_new').html()),
+	initialize	:	function(){
+		this.render();
+	},
+	render		:	function(){
+		this.$el.html(this.template());
+		return this;
 	}
 });
 
@@ -116,13 +142,13 @@ var pools_view = Backbone.View.extend({
 		pools.each(this.addOne);
 	},
 	events	:	{
-		"click"		:	"func"
+		//"click"		:	"func"
 	},
 	func	:	function(){
 		//pools.bind('all',function(e){console.log(e)});
 		//pools.fetch({add:true});
 		//console.log(pools);
-		console.log(pools.toJSON());
+		//console.log(pools.toJSON());
 		$('#pools_list').append(new pools_detail().el);
 	},
 	render		:	function(){
