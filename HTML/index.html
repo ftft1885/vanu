@@ -8,26 +8,131 @@
 <body>
 <div id="main_header"></div>
 <div id="main_body">
-	<div id="main_menu">
+	<div id="main_panel">
 	<ul id="menu">
-		<li id="menu_pools"><a>服务池</a></li>
+		<li id="menu_pools"><a href="#pools">服务池</a></li>
 	</ul>
 	</div>
 
 	<div id="main_content"></div>
 </div>
 <div id="main_footer"></div>
+<script src="js/jquery-min.js"></script>
+<script src="js/underscore-1.3.1.js"></script>
+<script src="js/backbone.js"></script>
+
+
+<script type="text/template" id="pools_div">
+<div id="content_header">
+<span class="content_name"><%=name  %></span><span class="content_addnew">新建<%=name %></span>
+</div>
+<p class="content_introduction">
+<%=introduction %>
+</p>
+<ul id="pools_list" class="content_list"> 
+<li>test1
+<li>test2
+<li>test3
+</ul>
+</script>
+<script type="text/template" id="pools_detail">
+ a test pool detail
+</script>
 <script>
-var menu = document.getElementById("menu");
-var menu_pools = document.getElementById("menu_pools");
-var main_content = document.getElementById("main_content");
-menu_pools.onclick = function()
-{
-	ajax('/menu/pools',function(result)
-	{
-		main_content.innerHTML = result;
-	});
-}
+//TODO:fix the collection fetch bug
+
+window.nuvaRouter = Backbone.Router.extend({
+	initialize	:	function(){
+		console.log("router initial");
+	},
+
+	routes	:	{
+		""			:	"index",
+		":menu"		:	"poolsFunc"
+	},
+
+	index		: function(){
+		console.log("homepage");
+	},
+	poolsFunc	: function(menu){
+		console.log("you click "+menu);
+		$('#main_content').append(new pools_view().el);
+	}
+});
+
+var pools_detail = Backbone.View.extend({
+	tagName		:	'li',
+	template	:	_.template($('#pools_detail').html()),
+	initialize	:	function(){
+		console.log("detail initial");
+		//console.log($('#pools_detail'));
+		this.render();
+	},
+	render		:	function(){
+		this.$el.html(this.template());
+		return this;
+	}
+});
+
+var pool_model = Backbone.View.extend({
+	defaults	:	function(){
+		return {
+			protocol_layer	:	'undef',
+			nodes			:	'undef',
+			monitor			:	'ping',
+			max_reply_time	:	30
+		}
+	},
+
+	validate	:	function(){
+		console.log("validate");
+	},
+
+	initialize	:	function(){
+		console.log("pool_model initial");
+	}
+}); 
+
+var pool_collection = Backbone.Collection.extend({
+	model	:	pool_model,
+	url		:	'data?ask=pools',
+});
+
+//var pools = new pool_collection;
+
+var pools_view = Backbone.View.extend({
+	tagName		:	'div',
+	template	:	_.template($('#pools_div').html()),
+	initialize	:	function(){
+		this.render();
+		/*find all pools
+		fetch() for()
+		$('ul').append(new pools_detail().el).....
+		*/
+		//$('#pools_list').append(new pools_detail().el);
+	},
+	events	:	{
+		"click"		:	"func"
+	},
+	func	:	function(){
+		pools.bind('all',function(e){console.log(e)});
+		pools.fetch({add:true});
+		console.log(pools);
+		$('#pools_list').append(new pools_detail().el);
+	},
+	render		:	function(){
+		window.pools = new pool_collection;
+		this.$el.html(this.template({
+			name		:	'服务池',
+			introduction:	'服务池管理服务节点的组。其基于负载平衡和会话保持标准，将流量传递到最适合的服务节点。'	
+		}));
+		return this;
+	}
+});
+new nuvaRouter();
+Backbone.history.start();
+var menu_list = [];	
+
 
 function ajax(url,callback)
 {

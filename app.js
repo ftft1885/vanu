@@ -1,6 +1,7 @@
 var http	=	require("http");
 var fs		=	require("fs");
 var url 	=	require("url");
+var menu = require("./menu");
 var port = 80;
 var env = process.env.NUVAHTML;
 http.createServer(function(req,res)
@@ -31,6 +32,19 @@ http.createServer(function(req,res)
 			res.end();
 	}
 	console.log(env + pathname);
+	if(pathname == '/data')
+	{
+			console.log("ask for data");
+			menu.router(pathname,function(data)
+			{
+				res.writeHead(200,{'Content-Type':'text/html'});
+				res.end(data);
+				return;
+			});
+	}
+	else
+	{
+
 	fs.readFile(env + pathname,function(err,data)
 	{
 		if(err)
@@ -44,6 +58,11 @@ http.createServer(function(req,res)
 			res.writeHead(200,{'Content-Type':'text/css'});
 			res.end(data);
 		}
+		else if(req.url.indexOf(".js") == req.url.length - 3)
+		{
+			res.writeHead(200,{'Content-Type':'text/javascript'});
+			res.end(data);
+		}
 		else if(req.url.indexOf(".html") == req.url.length - 5)
 		{
 			res.writeHead(200,{'Content-Type':'text/html'});
@@ -55,6 +74,8 @@ http.createServer(function(req,res)
 			res.end(data);
 		}
 	});
+	}
+
 }).listen(port,function(err)
 {
 	if(!err)

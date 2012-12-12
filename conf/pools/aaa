@@ -1,0 +1,29 @@
+protocol_layer	layer7
+load_balancing!algorithm	roundrobin
+ssl_encrypt	No
+max_connect_time	4
+ssl_enhance	No
+bandwidth_class	
+passive_monitoring	Yes
+transparent	No
+keepalive	Yes
+max_idle_connections_pernode	50
+priority!enabled	No
+ftp_support_rfc_2428	No
+smtp!send_starttls	Yes
+ssl_strict_verify	No
+load_balancing!weighting!192.168.1.213:6677	1
+draining	
+monitors	Ping
+ssl_client_auth	No
+max_reply_time	30
+session_sync_enable	No
+persistence	
+priority!nodes	1
+note	
+priority!values	
+ssl_server_name	No
+comment	aaa
+failpool	
+error_file	
+nodes	192.168.1.213:6677 192.168.2.236:80

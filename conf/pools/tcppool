@@ -1,0 +1,30 @@
+protocol_layer	fastl4
+load_balancing!algorithm	roundrobin
+ssl_encrypt	No
+load_balancing!weighting!192.168.2.254:80	4
+max_connect_time	4
+ssl_enhance	No
+bandwidth_class	
+load_balancing!weighting!192.168.3.213:80	1
+passive_monitoring	Yes
+transparent	No
+keepalive	Yes
+max_idle_connections_pernode	50
+priority!enabled	No
+ftp_support_rfc_2428	No
+smtp!send_starttls	Yes
+ssl_strict_verify	No
+draining	
+monitors	Ping
+ssl_client_auth	No
+max_reply_time	30
+session_sync_enable	Yes
+persistence	dfsd
+priority!nodes	1
+note	
+priority!values	192.168.2.254:80:1 192.168.3.213:80:1
+ssl_server_name	No
+comment	tcppool
+failpool	
+error_file	
+nodes	192.168.2.254:80 192.168.3.213:80

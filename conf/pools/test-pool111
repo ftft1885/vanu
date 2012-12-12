@@ -1,0 +1,28 @@
+protocol_layer	layer7
+monitors	Ping
+comment	test-pool111
+nodes	192.168.2.205:80
+ssl_encrypt	No
+load_balancing!algorithm	roundrobin
+ssl_enhance	No
+max_connect_time	4
+bandwidth_class	
+passive_monitoring	Yes
+transparent	No
+keepalive	Yes
+max_idle_connections_pernode	50
+ssl_strict_verify	No
+smtp!send_starttls	Yes
+ftp_support_rfc_2428	No
+priority!enabled	No
+draining	
+ssl_client_auth	No
+priority!nodes	1
+persistence	
+session_sync_enable	No
+max_reply_time	30
+note	
+priority!values	
+ssl_server_name	No
+failpool	
+error_file	
