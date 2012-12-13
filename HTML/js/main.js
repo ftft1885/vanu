@@ -1,46 +1,3 @@
-window.nuvaRouter = Backbone.Router.extend({
-	initialize	:	function(){
-		console.log("router initial");
-	},
-
-	routes	:	{
-		""			:	"index",
-		":menu"		:	"poolsFunc",
-		":menu/addnew"	:	"addNewFunc"
-	},
-
-	index		: function(){
-		console.log("homepage");
-	},
-	addNewFunc	:	function(menu){
-		switch(menu){
-			case "pools"	:
-				var attrs = {
-					kind	:	menu,
-					title	:	"服务池",
-					_name	:	"服务池名称",
-					_nodes	:	"服务节点",
-					_protocol_layer	:	"protocol_layer",
-					_monitor	:	"健康检查",
-					name	:	"name",
-					nodes	:	"nodes",
-					protocol_layer	:	"protocol_layer",
-					monitor	:	"monitor",
-				};
-				var view = new nuvaView.add_new({model:new pool_model(),attributes:attrs});
-				$('#main_content').append(view.el);
-				//console.log(new nuvaView.add_new());
-			break;
-		}
-	},
-	poolsFunc	: function(menu){
-		console.log("you click "+menu);
-		$('#main_content').append(new pools_view().el);
-	}
-});
-new nuvaRouter();
-Backbone.history.start();
-
 window.nuvaView		=	{};
 window.nuvaModel	=	{};
 window.nuvaList		=	{};
@@ -81,13 +38,25 @@ nuvaView.add_new = Backbone.View.extend({
 
 var pools_detail = Backbone.View.extend({
 	tagName		:	'li',
+	className	:	'pool_detail',
 	template	:	_.template($('#pools_detail').html()),
 
 	initialize	:	function(){
 		console.log("detail initial");
 		//console.log(this.model.toJSON());
 		this.render();
+		$('.pool_detail').click(function(){
+			$(this).animate({height:'300px'});			
+		});
 	},
+	
+	events		:	{
+		'click'	:	function(){
+			console.log(this.animate);
+			console.log(this.el.animate);
+		}	
+	},
+	
 	render		:	function(){
 		this.$el.html(this.template(this.model.toJSON()));
 		return this;
@@ -127,6 +96,24 @@ var pools_view = Backbone.View.extend({
 		var view = new pools_detail({model:one_pool_model});
 		$('#pools_list').append(view.el);		
 	},
+	events	:	{
+		'click .button_add_new'	:	function(){		
+				var attrs = {
+					kind	:	menu,
+					title	:	"服务池",
+					_name	:	"服务池名称",
+					_nodes	:	"服务节点",
+					_protocol_layer	:	"protocol_layer",
+					_monitor	:	"健康检查",
+					name	:	"name",
+					nodes	:	"nodes",
+					protocol_layer	:	"protocol_layer",
+					monitor	:	"monitor",
+				};
+				var view = new nuvaView.add_new({model:new pool_model(),attributes:attrs});
+				$('#main_content').append(view.el);	
+		}
+	},
 	addAll	:	function(){
 		pools.each(this.addOne);
 	},
@@ -138,4 +125,28 @@ var pools_view = Backbone.View.extend({
 		return this;
 	}
 });
+
+window.nuvaRouter = Backbone.Router.extend({
+	initialize	:	function(){
+		console.log("router initial");
+	},
+
+	routes	:	{
+		""			:	"index",
+		":menu"		:	"poolsFunc",
+		//":menu/addnew"	:	"addNewFunc"
+	},
+
+	index		: function(){
+		console.log("homepage");
+	},
+	poolsFunc	: function(menu){
+		console.log("you click "+menu);
+		console.log(pools_view);
+		$('#main_content').append(new pools_view().el);
+	}
+});
+new nuvaRouter();
+Backbone.history.start();
+
 

@@ -36,7 +36,7 @@ body {
 	left		:	0;
 	right		:	0;
 	top			:	200px;
-	height		:	600px;
+	height		:	1200px;
 	background	:	#CCC;
 	
 }
@@ -136,5 +136,13 @@ body {
 	text-align	:	center;
 	line-height	:	2;
 }
+#pools_list li{
+	border	:	2px solid #FFF;
+}
+#pools_list li:hover{
+	border	:	2px solid #CCC;
+}
 
-
+.button_add_new {
+	cursor		:	pointer;	
+}
