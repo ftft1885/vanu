@@ -7,6 +7,7 @@ var port = 80;
 var env = process.env.NUVAHTML;
 http.createServer(function(req,res)
 {
+	var path = url.parse(req.url);
 	var pathname = url.parse(req.url).pathname;
 	console.log(pathname);
 	/*
@@ -33,25 +34,26 @@ http.createServer(function(req,res)
 	}
 	console.log(env + pathname);
 	//test
-	if(pathname == '/test')
+	if(pathname == '/setdata')//get..
 	{
 		req.on('data',function(data)
 		{
 			var datastr = data + "";
-			//var str = decodeURL(datastr);
-			var str = querystring.unescape(datastr);
+			var json = JSON.parse(datastr);
+			var name = json.name || 'default';
+			fs.writeFile(process.env.NUVACONF+'/pools/'+name,datastr);
 
-			console.log(str);
+			console.log(datastr);
 		});
 		
 		return;
 	}
 	//
 	
-	if(pathname == '/data')
+	if(pathname == '/getdata')
 	{
 			console.log("ask for data");
-			menu.router(pathname,function(data)
+			menu.router(path,function(data)
 			{
 				res.writeHead(200,{'Content-Type':'text/html'});
 				res.end(data);
@@ -87,6 +89,11 @@ http.createServer(function(req,res)
 		else if(req.url.indexOf(".ico") == req.url.length - 4)
 		{
 			res.writeHead(200,{'Content-Type':'image/x-icon'});
+			res.end(data);
+		}
+		else if(req.url.indexOf(".tpl") == req.url.length - 4)
+		{
+			res.writeHead(200,{'Content-Type':'text/html'});
 			res.end(data);
 		}
 	});

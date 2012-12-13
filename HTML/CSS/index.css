@@ -5,6 +5,10 @@
 	text-decoration	:	none;
 }
 
+input {
+	height	:	20px;
+}
+
 a:link		{color	:	#000;}
 a:visited	{color	:	#000;}
 a:hover		{background	:	#DDD;}
@@ -103,3 +107,34 @@ body {
 	margin-left	:	-250px;
 	border		:	2px solid #CCC;
 }
+
+.add_new table{
+	margin		:	8px auto;
+}
+
+.dialog_close {
+	font-size	:	20px;
+	cursor		:	pointer;
+	float		:	right;
+	background	:	#CCC;
+}
+
+.add_new tr{
+}
+
+.add_new td {
+	font-size	:	18px;
+	line-height	:	1.6;
+	padding		:	0px 20px 0px 20px;					
+}
+
+.add_new a {
+	display		:	inline-block;
+	height		:	30px;
+	width		:	100px;
+	float		:	right;
+	text-align	:	center;
+	line-height	:	2;
+}
+
+
