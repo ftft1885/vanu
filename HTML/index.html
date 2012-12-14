@@ -30,10 +30,27 @@
 </script>
 
 <script type="text/template" id="pools_detail">
+<div class="pool_show">
 Protocal Layer : <%=protocol_layer %><br>
 服务节点： <%=nodes %><br>
 健康检查： <%=monitor %><br>
 最长时间回复：<%=max_reply_time %><br>
+</div>
+</script>
+
+<script type="text/template" id="pool_setting">
+<div class="dialog_header">
+	<span class="dialog_close">X</span>
+	<h3>设置</h3>
+</div>
+<table>
+	<tr><td>protocol_layer:</td><td><input id="protocol_layer" type="text" value="<%=protocol_layer %>"/></td></tr>
+	<tr><td>nodes:</td><td><input id="nodes" type="text" value="<%=nodes %>"/></td></tr>
+	<tr><td>monitor</td><td><input id="monitor" type="text" value="<%=monitor %>"/></td></tr>
+	<tr><td>max_reply_time:</td><td><input id="max_reply_time" type="text" value="<%=max_reply_time %>"></td></tr>
+</table>
+<input class="dialog_cancel" type="button" value="取消"/>
+<input class="dialog_submit" type="button" value="保存"/>
 </script>
 
 <script type="text/template" id="add_new">

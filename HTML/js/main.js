@@ -45,18 +45,51 @@ var pools_detail = Backbone.View.extend({
 		console.log("detail initial");
 		//console.log(this.model.toJSON());
 		this.render();
-		$('.pool_detail').click(function(){
-			$(this).animate({height:'300px'});			
-		});
+		//TODO!!		
 	},
 	
 	events		:	{
-		'click'	:	function(){
-			console.log(this.animate);
-			console.log(this.el.animate);
-		}	
+		'click' :	function(){
+			this.model.on('all',function(e){
+				console.log("this model event = "+ e);
+			});
+			var view_pool_setting = new nuvaView.pool_setting({model:this.model});
+			$('#main_content').append(view_pool_setting.el);
+		}
 	},
 	
+	render		:	function(){
+		this.$el.html(this.template(this.model.toJSON()));
+		return this;
+	}
+});
+
+
+nuvaView.pool_setting = Backbone.View.extend({
+	tagName		:	'div',
+	className	:	'pool_setting',
+	template	:	_.template($('#pool_setting').html()),
+	events		:	{
+		'click .dialog_close'	:	'close',
+		'click .dialog_cancel'	:	'close',
+		'click .dialog_submit'	:	'submit',
+	},
+	close		:	function(){
+		$('.pool_setting').remove();
+	},
+	submit		:	function(){
+		this.model.set({
+			nodes			:	$('#nodes').val(),
+			monitor			:	$('#monitor').val(),
+			max_reply_time	:	$('#max_reply_time').val(),
+			protocol_layer	:	$('#protocol_layer').val()
+		});
+		this.model.save(this.model.attributes,{url:'/setdata?kind=pool&method=add'});
+		this.close();
+	},
+	initialize	:	function(){
+		this.render();
+	},
 	render		:	function(){
 		this.$el.html(this.template(this.model.toJSON()));
 		return this;

@@ -143,6 +143,15 @@ body {
 	border	:	2px solid #CCC;
 }
 
+.pool_setting {
+	position	:	fixed;
+	width		:	500px;
+	height		:	300px;
+	left		:	40%;
+	top			:	150px;
+	border		:	2px solid #CCC;
+}
+
 .button_add_new {
 	cursor		:	pointer;	
 }
