@@ -2,9 +2,11 @@ var http	=	require("http");
 var fs		=	require("fs");
 var url 	=	require("url");
 var querystring = require('querystring');
+var dataIO	=	require('./dataIO');
 var menu = require("./menu");
 var port = 80;
-var env = process.env.NUVAHTML;
+var $NUVAHTML = process.env.NUVAHTML || './HTML',
+	$NUVACONF = process.env.NUVACONF || './CONF';
 http.createServer(function(req,res)
 {
 	var path = url.parse(req.url);
@@ -32,18 +34,22 @@ http.createServer(function(req,res)
 			res.writeHead(302,{'Location':'/index.html'});
 			res.end();
 	}
-	console.log(env + pathname);
+	console.log($NUVAHTML + pathname);
 	//test
 	if(pathname == '/setdata')//get..
 	{
 		req.on('data',function(data)
 		{
+			//console.log(path);
+			dataIO.set(path,data);
+			/*
 			var datastr = data + "";
 			var json = JSON.parse(datastr);
 			var name = json.name || 'default';
-			fs.writeFile(process.env.NUVACONF+'/pools/'+name,datastr);
+			fs.writeFile($NUVACONF+'/pools/'+name,datastr);
 
 			console.log(datastr);
+			*/
 		});
 		
 		return;
@@ -63,7 +69,7 @@ http.createServer(function(req,res)
 	else
 	{
 
-	fs.readFile(env + pathname,function(err,data)
+	fs.readFile($NUVAHTML + pathname,function(err,data)
 	{
 		if(err)
 		{

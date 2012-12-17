@@ -22,9 +22,11 @@ nuvaView.add_new = Backbone.View.extend({
 			protocol_layer	:	$('#protocol_layer').val(),
 			nodes	:	$('#nodes').val(),
 		});
-		//console.log(this.model.toJSON());
 		console.log(this.model);
 		this.model.save(this.model.attributes,{url:'/setdata?kind=pool&method=add'});
+		var view = new pools_detail({model:this.model});
+		console.log(view.el);
+		$('#pools_list').prepend(view.el);
 		this.close();
 	},
 	close		:	function(){
@@ -45,6 +47,8 @@ var pools_detail = Backbone.View.extend({
 		console.log("detail initial");
 		//console.log(this.model.toJSON());
 		this.render();
+		this.model.bind('change',this.render,this);//use to flash the data change
+		this.model.bind('add',this.render,this);
 		//TODO!!		
 	},
 	
@@ -54,6 +58,7 @@ var pools_detail = Backbone.View.extend({
 				console.log("this model event = "+ e);
 			});
 			var view_pool_setting = new nuvaView.pool_setting({model:this.model});
+			$('.pool_setting').remove();//remove other setting div
 			$('#main_content').append(view_pool_setting.el);
 		}
 	},
@@ -84,7 +89,7 @@ nuvaView.pool_setting = Backbone.View.extend({
 			max_reply_time	:	$('#max_reply_time').val(),
 			protocol_layer	:	$('#protocol_layer').val()
 		});
-		this.model.save(this.model.attributes,{url:'/setdata?kind=pool&method=add'});
+		this.model.save(this.model.attributes,{url:'/setdata?kind=pool&method=set'});
 		this.close();
 	},
 	initialize	:	function(){
@@ -127,10 +132,12 @@ var pools_view = Backbone.View.extend({
 	},
 	addOne	:	function(one_pool_model){
 		var view = new pools_detail({model:one_pool_model});
+		console.log(one_pool_model);
 		$('#pools_list').append(view.el);		
 	},
 	events	:	{
 		'click .button_add_new'	:	function(){		
+				console.log(pools.toJSON());
 				var attrs = {
 					kind	:	menu,
 					title	:	"服务池",
